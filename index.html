@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kootam</title>
+<meta name="description" content="A crowd-pledged flight campaign to fly home for Diwali through Pongal, without paying peak-season fares.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#FBF3E7;
+    --ground-raised:#FFFFFF;
+    --ground-sunken:#F1E4D0;
+    --ink:#241640;
+    --ink-dim:#6B5C8A;
+    --marigold:#C97A0A;
+    --marigold-ink:#5C3900;
+    --vermillion:#C93A20;
+    --jade:#1C8F81;
+    --gold-line:#B8912E;
+    --card-shadow: 0 1px 2px rgba(36,22,64,.06), 0 12px 32px -16px rgba(36,22,64,.28);
+    --arc-stroke: var(--ink-dim);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#1A1030;
+      --ground-raised:#241640;
+      --ground-sunken:#150C28;
+      --ink:#F5EFE6;
+      --ink-dim:#B9A9D6;
+      --marigold:#FF9F1C;
+      --marigold-ink:#3A2400;
+      --vermillion:#F0654A;
+      --jade:#3FC7B6;
+      --gold-line:#C9A24B;
+      --card-shadow: 0 1px 2px rgba(0,0,0,.4), 0 20px 48px -20px rgba(0,0,0,.6);
+      --arc-stroke: var(--ink-dim);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#1A1030;
+    --ground-raised:#241640;
+    --ground-sunken:#150C28;
+    --ink:#F5EFE6;
+    --ink-dim:#B9A9D6;
+    --marigold:#FF9F1C;
+    --marigold-ink:#3A2400;
+    --vermillion:#F0654A;
+    --jade:#3FC7B6;
+    --gold-line:#C9A24B;
+    --card-shadow: 0 1px 2px rgba(0,0,0,.4), 0 20px 48px -20px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:'Archivo',"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+  ::selection{ background:var(--marigold); color:var(--marigold-ink); }
+  a{ color:inherit; }
+  h1,h2,h3{
+    font-family:'Fraunces',Georgia,serif;
+    text-wrap:balance;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .num{ font-family:'IBM Plex Mono',"SFMono-Regular",Menlo,monospace; font-variant-numeric:tabular-nums; }
+  .eyebrow{
+    font-family:'Archivo',sans-serif;
+    font-weight:700;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--jade);
+  }
+  button{ font-family:inherit; }
+  :focus-visible{ outline:2px solid var(--jade); outline-offset:3px; border-radius:4px; }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding-inline:20px;
+  }
+
+  /* kolam dot motif */
+  .kolam-band{
+    background-image: radial-gradient(var(--gold-line) 1.4px, transparent 1.6px);
+    background-size: 22px 22px;
+    background-position: 11px 11px;
+    opacity:.35;
+    height:14px;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    padding-block:22px;
+  }
+  .header-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .wordmark{
+    display:flex;
+    align-items:baseline;
+    gap:.5rem;
+  }
+  .wordmark .glyph{
+    font-size:1.3rem;
+  }
+  .wordmark span{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:1.5rem;
+  }
+  .wordmark small{
+    font-family:'Archivo',sans-serif;
+    font-weight:500;
+    color:var(--ink-dim);
+    font-size:.8rem;
+  }
+  nav{
+    display:flex;
+    gap:1.6rem;
+    font-size:.9rem;
+    font-weight:600;
+  }
+  nav a{ text-decoration:none; opacity:.82; }
+  nav a:hover{ opacity:1; color:var(--marigold); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding-block: 28px 56px;
+    display:grid;
+    gap:40px;
+  }
+  .hero-copy h1{
+    font-size:clamp(2.3rem, 5.4vw, 3.7rem);
+    font-weight:600;
+    line-height:1.04;
+  }
+  .hero-copy h1 em{
+    font-style:italic;
+    color:var(--marigold);
+  }
+  .hero-copy p{
+    max-width:46ch;
+    color:var(--ink-dim);
+    font-size:1.08rem;
+    margin:1rem 0 0;
+  }
+  .hero-ctas{
+    display:flex;
+    gap:.8rem;
+    flex-wrap:wrap;
+    margin-top:1.6rem;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    padding:.78rem 1.3rem;
+    border-radius:999px;
+    font-weight:700;
+    font-size:.92rem;
+    text-decoration:none;
+    border:1.5px solid transparent;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{
+    background:var(--marigold);
+    color:var(--marigold-ink);
+    box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--marigold) 70%, transparent);
+  }
+  .btn-primary:hover{ box-shadow:0 14px 28px -10px color-mix(in srgb, var(--marigold) 80%, transparent); }
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border-color:color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+  .btn-ghost:hover{ border-color:var(--ink); }
+
+  /* ---------- boarding pass ---------- */
+  .pass{
+    background:var(--ground-raised);
+    border-radius:22px;
+    box-shadow:var(--card-shadow);
+    overflow:hidden;
+    border:1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  .pass-main{
+    padding:28px 30px 22px;
+    display:grid;
+    gap:20px;
+  }
+  .pass-route{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:16px;
+  }
+  .pass-city{ text-align:left; }
+  .pass-city.to{ text-align:right; }
+  .pass-code{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:2.6rem;
+    line-height:1;
+  }
+  .pass-city-name{
+    color:var(--ink-dim);
+    font-size:.82rem;
+    margin-top:.3rem;
+    font-weight:600;
+  }
+  .pass-arc{ position:relative; height:46px; }
+  .pass-arc svg{ width:100%; height:100%; overflow:visible; }
+  .pass-arc path.route{
+    fill:none;
+    stroke:var(--arc-stroke);
+    stroke-width:1.6;
+    stroke-dasharray:4 6;
+    stroke-linecap:round;
+  }
+  .pass-plane{
+    position:absolute;
+    top:0; left:0;
+    font-size:1.4rem;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
+    offset-path: path('M4,40 C 60,-10 130,-10 186,40');
+    offset-rotate:0deg;
+    offset-distance:50%;
+    animation: fly 3.6s ease-in-out infinite alternate;
+  }
+  @keyframes fly{
+    0%{ offset-distance:6%; }
+    100%{ offset-distance:94%; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .pass-plane{ animation:none; offset-distance:50%; }
+  }
+
+  .pass-meta{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:16px 20px;
+    padding-top:4px;
+    border-top:1px dashed color-mix(in srgb, var(--ink) 20%, transparent);
+  }
+  .meta-item .eyebrow{ margin-bottom:.3rem; display:block; }
+  .meta-item .val{ font-weight:600; font-size:1rem; }
+  .meta-item .val.num{ font-size:1.05rem; }
+
+  .pass-progress{
+    display:grid;
+    gap:.5rem;
+  }
+  .progress-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:.86rem;
+  }
+  .progress-top .num{ font-weight:600; }
+  .progress-track{
+    height:10px;
+    border-radius:999px;
+    background:var(--ground-sunken);
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--jade), color-mix(in srgb, var(--jade) 70%, var(--marigold)));
+    border-radius:999px;
+    transition:width .5s ease;
+  }
+
+  .pass-divider{
+    position:relative;
+    height:0;
+    border-top:2px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+    margin:0 0;
+  }
+  .pass-divider::before,.pass-divider::after{
+    content:"";
+    position:absolute;
+    top:-11px;
+    width:22px;
+    height:22px;
+    background:var(--ground);
+    border-radius:50%;
+  }
+  .pass-divider::before{ left:-11px; }
+  .pass-divider::after{ right:-11px; }
+
+  .pass-stub{
+    padding:18px 30px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    background:var(--ground-sunken);
+  }
+  .barcode{
+    height:30px;
+    width:120px;
+    background-image: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 9px, var(--ink) 9px 12px, transparent 12px 14px);
+    opacity:.55;
+  }
+  .pass-stub .organizer{ font-size:.85rem; color:var(--ink-dim); }
+  .pass-stub .organizer b{ color:var(--ink); }
+
+  /* ---------- section shell ---------- */
+  section{ padding-block:52px; }
+  .section-head{ margin-bottom:28px; max-width:60ch; }
+  .section-head h2{ font-size:clamp(1.7rem,3vw,2.3rem); font-weight:600; margin-top:.4rem; }
+  .section-head p{ color:var(--ink-dim); margin-top:.7rem; }
+
+  /* ---------- mission/vision brochure ---------- */
+  .brochure{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:var(--card-shadow);
+  }
+  .panel{
+    padding:32px 30px;
+    position:relative;
+  }
+  .panel.mission{ background:var(--ground-raised); }
+  .panel.vision{ background:var(--ink); color:var(--ground); }
+  .panel.vision .eyebrow{ color:var(--marigold); }
+  .panel h3{ font-size:1.5rem; margin-top:.5rem; font-weight:600; }
+  .panel p{ margin-top:.9rem; color:inherit; opacity:.86; max-width:42ch; }
+  .fold-seam{
+    position:absolute; top:0; bottom:0; left:0; width:1px;
+    background:repeating-linear-gradient(180deg, color-mix(in srgb, var(--gold-line) 70%, transparent) 0 6px, transparent 6px 12px);
+  }
+  .panel.vision .fold-seam{ display:none; }
+
+  /* ---------- stat comparison ---------- */
+  .stat-band{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:18px;
+    padding:30px;
+    border-radius:22px;
+    background:var(--ground-raised);
+    box-shadow:var(--card-shadow);
+  }
+  .stat{ text-align:center; }
+  .stat .figure{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(2.1rem,5vw,3.1rem);
+    line-height:1;
+  }
+  .stat.peak .figure{ color:var(--vermillion); text-decoration:line-through; text-decoration-thickness:3px; text-decoration-color:color-mix(in srgb, var(--vermillion) 60%, transparent); }
+  .stat.pooled .figure{ color:var(--jade); }
+  .stat .cap{ margin-top:.5rem; font-size:.86rem; color:var(--ink-dim); }
+  .stat-vs{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    color:var(--ink-dim);
+    font-size:1.1rem;
+  }
+
+  /* ---------- how it works ---------- */
+  .stubs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+  }
+  .stub{
+    background:var(--ground-raised);
+    border-radius:16px;
+    padding:20px 18px 22px;
+    box-shadow:var(--card-shadow);
+    position:relative;
+  }
+  .stub .n{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem;
+    color:var(--jade);
+    font-weight:600;
+  }
+  .stub h4{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.15rem;
+    margin:.5rem 0 .4rem;
+  }
+  .stub p{ font-size:.88rem; color:var(--ink-dim); margin:0; }
+  .stub:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    right:-8px; top:50%; transform:translateY(-50%);
+    width:14px; height:14px;
+    border-radius:50%;
+    background:var(--ground);
+    display:none;
+  }
+
+  /* ---------- campaign detail ---------- */
+  .campaign-card{
+    background:var(--ground-raised);
+    border-radius:22px;
+    box-shadow:var(--card-shadow);
+    padding:32px;
+    display:grid;
+    gap:26px;
+  }
+  .campaign-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .campaign-top h3{ font-size:1.7rem; font-weight:600; }
+  .campaign-top .route-sub{ color:var(--ink-dim); margin-top:.3rem; font-size:.95rem; }
+  .status-pill{
+    font-size:.78rem;
+    font-weight:700;
+    padding:.35rem .8rem;
+    border-radius:999px;
+    background:color-mix(in srgb, var(--jade) 18%, transparent);
+    color:var(--jade);
+    white-space:nowrap;
+  }
+  .tiers{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+  .tier{
+    border:1.5px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    border-radius:14px;
+    padding:14px 16px;
+  }
+  .tier.active{ border-color:var(--marigold); background:color-mix(in srgb, var(--marigold) 8%, transparent); }
+  .tier .range{ font-size:.78rem; color:var(--ink-dim); font-weight:600; }
+  .tier .price{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:1.3rem; margin-top:.2rem; }
+  .tier .tag{ font-size:.72rem; color:var(--marigold); font-weight:700; margin-top:.2rem; display:block; }
+
+  .pledge-panel{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:20px;
+    align-items:center;
+    padding:20px;
+    background:var(--ground-sunken);
+    border-radius:16px;
+    flex-wrap:wrap;
+  }
+  .stepper{
+    display:inline-flex;
+    align-items:center;
+    gap:.9rem;
+    background:var(--ground-raised);
+    border-radius:999px;
+    padding:.4rem .5rem;
+    border:1.5px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+  .stepper button{
+    width:30px; height:30px;
+    border-radius:50%;
+    border:none;
+    background:var(--ground-sunken);
+    color:var(--ink);
+    font-size:1.1rem;
+    cursor:pointer;
+    line-height:1;
+  }
+  .stepper button:hover{ background:var(--marigold); color:var(--marigold-ink); }
+  .stepper .count{ font-family:'IBM Plex Mono',monospace; font-weight:600; min-width:1.4ch; text-align:center; }
+  .pledge-total{ font-size:.85rem; color:var(--ink-dim); }
+  .pledge-total .num{ color:var(--ink); font-weight:600; }
+  #pledgeBtn{ min-width:180px; justify-content:center; }
+  .pledge-note{ font-size:.8rem; color:var(--ink-dim); max-width:58ch; }
+  .deadline-row{
+    display:flex; align-items:center; gap:.6rem; font-size:.88rem; color:var(--ink-dim);
+  }
+  .deadline-row .num{ color:var(--vermillion); font-weight:600; }
+
+  /* ---------- vote chips ---------- */
+  .routes{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.7rem;
+  }
+  .route-chip{
+    display:flex;
+    align-items:center;
+    gap:.55rem;
+    padding:.6rem 1rem;
+    border-radius:999px;
+    border:1.5px solid color-mix(in srgb, var(--ink) 16%, transparent);
+    background:var(--ground-raised);
+    cursor:pointer;
+    font-weight:600;
+    font-size:.88rem;
+  }
+  .route-chip:hover{ border-color:var(--marigold); }
+  .route-chip.voted{ border-color:var(--jade); background:color-mix(in srgb, var(--jade) 12%, transparent); }
+  .route-chip .count{ font-family:'IBM Plex Mono',monospace; color:var(--ink-dim); font-weight:500; }
+  .route-chip.voted .count{ color:var(--jade); font-weight:700; }
+
+  /* ---------- trust band ---------- */
+  .trust{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  .trust-item{
+    padding:22px;
+    border-radius:16px;
+    background:var(--ground-raised);
+    box-shadow:var(--card-shadow);
+  }
+  .trust-item .eyebrow{ color:var(--vermillion); }
+  .trust-item h4{ font-family:'Fraunces',serif; font-size:1.1rem; font-weight:600; margin:.5rem 0 .4rem; }
+  .trust-item p{ font-size:.88rem; color:var(--ink-dim); margin:0; }
+
+  footer{
+    padding-block:40px;
+    display:grid;
+    gap:14px;
+  }
+  .footer-row{
+    display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .footer-fine{ font-size:.78rem; color:var(--ink-dim); max-width:60ch; }
+
+  @media (max-width:820px){
+    .brochure{ grid-template-columns:1fr; }
+    .fold-seam{ display:none; }
+    .stat-band{ grid-template-columns:1fr; text-align:center; }
+    .stat-vs{ transform:rotate(90deg); }
+    .stubs{ grid-template-columns:1fr 1fr; }
+    .trust{ grid-template-columns:1fr; }
+    .tiers{ grid-template-columns:1fr; }
+    .pledge-panel{ grid-template-columns:1fr; }
+  }
+  @media (max-width:520px){
+    .stubs{ grid-template-columns:1fr; }
+    .pass-code{ font-size:1.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="header-row">
+      <div class="wordmark">
+        <span class="glyph">🪔</span>
+        <span>Kootam</span>
+        <small>கூட்டம் · "crowd"</small>
+      </div>
+      <nav>
+        <a href="#mission">Mission</a>
+        <a href="#how">How it works</a>
+        <a href="#campaign">This campaign</a>
+        <a href="#vote">Vote a route</a>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<div class="kolam-band"></div>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">Phase 1 · Group-fare pooling</span>
+      <h1>Go home for the <em>crowded</em> season —<br>without paying crowded-season prices.</h1>
+      <p>Diwali. Christmas. Pongal. The three weeks everyone flies to India are the three weeks fares triple. Kootam pools your community's seats into one group booking, so the airline gives you the group rate instead.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#campaign">See the LAX → MAA campaign</a>
+        <a class="btn btn-ghost" href="#vote">Vote for your route</a>
+      </div>
+    </div>
+
+    <div class="pass" id="campaign">
+      <div class="pass-main">
+        <div class="pass-route">
+          <div class="pass-city">
+            <div class="pass-code">LAX</div>
+            <div class="pass-city-name">Los Angeles</div>
+          </div>
+          <div class="pass-arc">
+            <svg viewBox="0 0 190 46" preserveAspectRatio="none" aria-hidden="true">
+              <path class="route" d="M4,40 C 60,-10 130,-10 186,40" />
+            </svg>
+            <div class="pass-plane" aria-hidden="true">✈️</div>
+          </div>
+          <div class="pass-city to">
+            <div class="pass-code">MAA</div>
+            <div class="pass-city-name">Chennai</div>
+          </div>
+        </div>
+
+        <div class="pass-meta">
+          <div class="meta-item">
+            <span class="eyebrow">Depart</span>
+            <div class="val num">18 Dec 2026</div>
+          </div>
+          <div class="meta-item">
+            <span class="eyebrow">Return</span>
+            <div class="val num">10 Jan 2027</div>
+          </div>
+          <div class="meta-item">
+            <span class="eyebrow">Spans</span>
+            <div class="val">Christmas → Pongal</div>
+          </div>
+          <div class="meta-item">
+            <span class="eyebrow">Pledge by</span>
+            <div class="val num" id="deadlineDate">1 Nov 2026</div>
+          </div>
+        </div>
+
+        <div class="pass-progress">
+          <div class="progress-top">
+            <span><span class="num" id="seatCount">6</span> of <span class="num">10</span> seats pledged</span>
+            <span class="num" id="seatPct">60%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:60%"></div></div>
+        </div>
+      </div>
+
+      <div class="pass-divider"></div>
+
+      <div class="pass-stub">
+        <div class="organizer">Organized with <b>LA Tamil Sangam</b> &amp; <b>USC Tamil Students</b></div>
+        <div class="barcode" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section id="mission">
+    <div class="brochure">
+      <div class="panel mission">
+        <div class="fold-seam"></div>
+        <span class="eyebrow">Mission</span>
+        <h3>Turn a hundred solo bookings into one group fare.</h3>
+        <p>Every diaspora family flying home for the same festival is, to the airline, a hundred strangers paying peak price alone. Kootam pools that same demand into a single group booking of 10 to 50 seats — the size airlines already discount for — and passes the group rate back to everyone who pledged.</p>
+      </div>
+      <div class="panel vision">
+        <span class="eyebrow">Vision</span>
+        <h3>Nobody skips Pongal because of the airfare.</h3>
+        <p>We want a Tamil Sangam, a temple, or a student association in any city to open the app, see enough neighbors want the same dates, and unlock a fare that makes going home for the festival an easy yes — not a $1,800 sacrifice.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Why the dates matter</span>
+      <h2>The three weeks everyone needs a seat are the three weeks fares spike hardest.</h2>
+      <p>Diwali in November, then Christmas straight into Pongal in mid-January — LAX–MAA fares in that window regularly run well past what the same trip costs in March. Kootam's group-fare pool exists specifically for this stretch of the calendar.</p>
+    </div>
+    <div class="stat-band">
+      <div class="stat peak">
+        <div class="figure num">$1,650</div>
+        <div class="cap">Typical solo peak-season fare</div>
+      </div>
+      <div class="stat-vs">vs.</div>
+      <div class="stat pooled">
+        <div class="figure num">$650</div>
+        <div class="cap">Kootam pooled fare, this campaign</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section id="how">
+    <div class="section-head">
+      <span class="eyebrow">How it works</span>
+      <h2>Four stubs, one trip home.</h2>
+    </div>
+    <div class="stubs">
+      <div class="stub"><span class="n">01</span><h4>Vote</h4><p>Say which route and month you'd fly — this is what tells us a campaign is worth opening.</p></div>
+      <div class="stub"><span class="n">02</span><h4>Pledge</h4><p>Put down a refundable deposit to claim a seat at the current tier price. No card hold — a real deposit, held in escrow.</p></div>
+      <div class="stub"><span class="n">03</span><h4>Unlock</h4><p>Hit the seat target before the deadline and the group fare locks in with the airline. Miss it, and every deposit is refunded automatically.</p></div>
+      <div class="stub"><span class="n">04</span><h4>Fly</h4><p>Passenger names go to the host travel agency, tickets get issued, and your PNR lands in the app.</p></div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">This campaign</span>
+      <h2>LAX → MAA, Dec 18 – Jan 10</h2>
+      <p>Currently filling. Six seats in, four to go before the 10-seat target — the fare gets locked the moment it's hit.</p>
+    </div>
+
+    <div class="campaign-card">
+      <div class="campaign-top">
+        <div>
+          <h3>Los Angeles → Chennai</h3>
+          <div class="route-sub">Group fare · max 15 seats · organized by LA Tamil Sangam</div>
+        </div>
+        <span class="status-pill">Open for pledges</span>
+      </div>
+
+      <div class="tiers">
+        <div class="tier active">
+          <div class="range">Seats 1–10</div>
+          <div class="price num">$650</div>
+          <span class="tag">Current tier</span>
+        </div>
+        <div class="tier">
+          <div class="range">Seats 11–15</div>
+          <div class="price num">$720</div>
+        </div>
+        <div class="tier">
+          <div class="range">Add-ons</div>
+          <div class="price num">from $40</div>
+          <span class="tag" style="color:var(--ink-dim);">bags · insurance</span>
+        </div>
+      </div>
+
+      <div class="pledge-panel">
+        <div>
+          <div class="deadline-row">Pledge deadline <span class="num" id="daysLeft">—</span> · unfunded pledges refund automatically</div>
+          <div class="pledge-note">$75 refundable deposit per seat now; the remaining balance is only charged once the campaign is funded.</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div class="stepper">
+            <button type="button" id="seatMinus" aria-label="Decrease seats">−</button>
+            <span class="count num" id="seatStepCount">1</span>
+            <button type="button" id="seatPlus" aria-label="Increase seats">+</button>
+          </div>
+          <button class="btn btn-primary" id="pledgeBtn">Pledge · <span class="num" id="pledgeTotal">$75</span> deposit</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section id="vote">
+    <div class="section-head">
+      <span class="eyebrow">Vote for a route</span>
+      <h2>Not your route yet? Tell us what to open next.</h2>
+      <p>Enough votes on a route and month is what turns a wishlist into an actual campaign.</p>
+    </div>
+    <div class="routes" id="routeChips">
+      <button class="route-chip" data-votes="41">SFO → MAA, Dec <span class="count">41</span></button>
+      <button class="route-chip" data-votes="27">JFK → DEL, Diwali <span class="count">27</span></button>
+      <button class="route-chip" data-votes="19">ORD → BLR, Dec <span class="count">19</span></button>
+      <button class="route-chip" data-votes="15">YYZ → MAA, Pongal <span class="count">15</span></button>
+      <button class="route-chip" data-votes="9">DFW → HYD, Dec <span class="count">9</span></button>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section>
+    <div class="trust">
+      <div class="trust-item">
+        <span class="eyebrow">No risk</span>
+        <h4>Refunded automatically if it doesn't fill</h4>
+        <p>Deposits sit in escrow, not with us. If a campaign misses its target by the deadline, every deposit is returned — no one has to ask.</p>
+      </div>
+      <div class="trust-item">
+        <span class="eyebrow">Not a card hold</span>
+        <h4>A real deposit, not a 7-day hold</h4>
+        <p>Card holds expire in about a week. Pledge windows run longer than that, so we take an actual refundable deposit instead.</p>
+      </div>
+      <div class="trust-item">
+        <span class="eyebrow">Community-run</span>
+        <h4>Organized by the groups you already trust</h4>
+        <p>Sangams, temples, and student associations run these campaigns and earn a referral fee out of our markup — not out of your fare.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="kolam-band"></div>
+
+<div class="wrap">
+  <footer>
+    <div class="footer-row">
+      <div class="wordmark">
+        <span class="glyph">🪔</span>
+        <span>Kootam</span>
+      </div>
+      <a class="btn btn-ghost" id="shareBtn" href="#">Share this campaign on WhatsApp</a>
+    </div>
+    <p class="footer-fine">"Kootam" is a working name — trademark clearance pending before public launch. Phase 1 proves demand through group-fare pooling on existing airlines, before Kootam ever touches a seat block or a charter.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var TOTAL_SEATS = 10;
+  var pledged = 6;
+  var pricePerSeat = 650;
+  var depositPerSeat = 75;
+  var seatStep = 1;
+
+  var seatCountEl = document.getElementById('seatCount');
+  var seatPctEl = document.getElementById('seatPct');
+  var fillEl = document.getElementById('progressFill');
+
+  function renderProgress(){
+    seatCountEl.textContent = pledged;
+    var pct = Math.min(100, Math.round((pledged/TOTAL_SEATS)*100));
+    seatPctEl.textContent = pct + '%';
+    fillEl.style.width = pct + '%';
+  }
+
+  var stepCountEl = document.getElementById('seatStepCount');
+  var pledgeTotalEl = document.getElementById('pledgeTotal');
+  function renderStep(){
+    stepCountEl.textContent = seatStep;
+    pledgeTotalEl.textContent = '$' + (seatStep*depositPerSeat);
+  }
+  document.getElementById('seatMinus').addEventListener('click', function(){
+    seatStep = Math.max(1, seatStep-1);
+    renderStep();
+  });
+  document.getElementById('seatPlus').addEventListener('click', function(){
+    var remaining = TOTAL_SEATS - pledged;
+    seatStep = Math.min(Math.max(remaining,1), seatStep+1);
+    renderStep();
+  });
+
+  var pledgeBtn = document.getElementById('pledgeBtn');
+  pledgeBtn.addEventListener('click', function(){
+    if (pledgeBtn.dataset.done === '1') return;
+    var remaining = TOTAL_SEATS - pledged;
+    var add = Math.min(seatStep, remaining);
+    pledged += add;
+    renderProgress();
+    pledgeBtn.textContent = '✓ Pledged — you\'re in';
+    pledgeBtn.dataset.done = '1';
+    pledgeBtn.style.opacity = '.85';
+  });
+
+  renderProgress();
+  renderStep();
+
+  // route voting
+  document.querySelectorAll('.route-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var span = chip.querySelector('.count');
+      var n = parseInt(chip.dataset.votes, 10);
+      var voted = chip.classList.toggle('voted');
+      n = voted ? n+1 : n-1;
+      chip.dataset.votes = n;
+      span.textContent = n;
+    });
+  });
+
+  // deadline countdown
+  var deadline = new Date('2026-11-01T23:59:00');
+  var daysLeftEl = document.getElementById('daysLeft');
+  var msPerDay = 1000*60*60*24;
+  var diff = Math.ceil((deadline - new Date())/msPerDay);
+  daysLeftEl.textContent = diff > 0 ? diff + ' days left' : 'closed';
+
+  // whatsapp share
+  var shareBtn = document.getElementById('shareBtn');
+  shareBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    var text = "LAX → MAA, Dec 18 – Jan 10. Pooling seats for a group fare so we all pay less to go home for the holidays. Pledge a seat: " + window.location.href;
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
+  });
+})();
+</script>
+</body>
+</html>
