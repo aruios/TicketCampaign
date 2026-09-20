@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* Kootam brand tokens — night-festival palette (marigold/vermillion/jade on
+   deep aubergine), matching the published landing page. Light is the base
+   palette; dark redefines the same token names. */
+:root {
+  --ground: #fbf3e7;
+  --ground-raised: #ffffff;
+  --ground-sunken: #f1e4d0;
+  --ink: #241640;
+  --ink-dim: #6b5c8a;
+  --marigold: #c97a0a;
+  --marigold-ink: #5c3900;
+  --vermillion: #c93a20;
+  --jade: #1c8f81;
+  --gold-line: #b8912e;
+  --card-shadow: 0 1px 2px rgba(36, 22, 64, 0.06), 0 12px 32px -16px rgba(36, 22, 64, 0.28);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #1a1030;
+    --ground-raised: #241640;
+    --ground-sunken: #150c28;
+    --ink: #f5efe6;
+    --ink-dim: #b9a9d6;
+    --marigold: #ff9f1c;
+    --marigold-ink: #3a2400;
+    --vermillion: #f0654a;
+    --jade: #3fc7b6;
+    --gold-line: #c9a24b;
+    --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 20px 48px -20px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-ground-raised: var(--ground-raised);
+  --color-ground-sunken: var(--ground-sunken);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-marigold: var(--marigold);
+  --color-marigold-ink: var(--marigold-ink);
+  --color-vermillion: var(--vermillion);
+  --color-jade: var(--jade);
+  --color-gold-line: var(--gold-line);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-plex-mono);
+}
+
+::selection {
+  background: var(--marigold);
+  color: var(--marigold-ink);
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  text-wrap: balance;
+}
+
+.num {
+  font-family: var(--font-plex-mono), "SFMono-Regular", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jade);
+}
+
+.kolam-band {
+  background-image: radial-gradient(var(--gold-line) 1.4px, transparent 1.6px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+  opacity: 0.35;
+  height: 14px;
+}

@@ -1,0 +1,46 @@
+project_id = "kootam-backend"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3000"
+additional_redirect_urls = ["https://127.0.0.1:3000"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = false
+# Phone OTP provider (Twilio) configured via `supabase secrets set` in real use;
+# see ../../Documentation/backend-setup.md
+
+[auth.external.apple]
+enabled = false
+# Enable + fill in for "Sign in with Apple" once you have an Apple Developer
+# Services ID configured.
+
+[storage]
+enabled = true
+
+[edge_runtime]
+enabled = true
+
+[analytics]
+# Logflare/Vector are heavyweight and not needed for local app development;
+# disabling avoids OOM issues on resource-constrained container VMs (e.g. a
+# 2GB podman machine).
+enabled = false
